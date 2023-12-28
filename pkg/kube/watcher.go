@@ -135,6 +135,7 @@ func (e *EventWatcher) OnDelete(obj interface{}) {
 }
 
 func (e *EventWatcher) Start() {
+	log.Info().Msg("Starting event watcher")
 	go e.informer.Run(e.stopper)
 }
 

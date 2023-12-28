@@ -1,6 +1,6 @@
-logLevel: error
-logFormat: json
-clusterName: my-super-local-cluster
+logLevel: debug
+logFormat: pretty
+clusterName: my-levdev-cluster
 route:
   routes:
     - match:

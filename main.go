@@ -85,6 +85,7 @@ func main() {
 			// note that per code this value is not set anywhere on the kubernetes side
 			// https://github.com/kubernetes/apimachinery/blob/v0.22.4/pkg/apis/meta/v1/types.go#L276
 			event.ClusterName = cfg.ClusterName
+			log.Debug().Str("event", event.Message).Str("cluster", event.ClusterName).Msg("onEvent handler")
 			engine.OnEvent(event)
 		}
 	}

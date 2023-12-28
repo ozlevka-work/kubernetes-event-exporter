@@ -16,19 +16,19 @@ type Route struct {
 
 func (r *Route) ProcessEvent(ev *kube.EnhancedEvent, registry ReceiverRegistry) {
 	// First determine whether we will drop the event: If any of the drop is matched, we break the loop
-	log.Debug().Str("event", ev.Message).Msg("Processing event Before drop loop")
 	for _, v := range r.Drop {
 		if v.MatchesEvent(ev) {
 			return
 		}
 	}
-	log.Debug().Str("event", ev.Message).Msg("Processing event Before match loop")
 
 	// It has match rules, it should go to the matchers
 	matchesAll := true
 	for _, rule := range r.Match {
 		if rule.MatchesEvent(ev) {
+			log.Debug().Str("event", ev.Message).Msg("Event matches rule")
 			if rule.Receiver != "" {
+				log.Debug().Str("event", ev.Message).Str("receiver", rule.Receiver).Msg("Sending event to receiver")
 				registry.SendEvent(rule.Receiver, ev)
 				// Send the event down the hole
 			}
@@ -36,8 +36,6 @@ func (r *Route) ProcessEvent(ev *kube.EnhancedEvent, registry ReceiverRegistry) 
 			matchesAll = false
 		}
 	}
-
-	log.Debug().Str("event", ev.Message).Msg("Processing event After match loop")
 
 	// If all matches are satisfied, we can send them down to the rabbit hole
 	if matchesAll {
